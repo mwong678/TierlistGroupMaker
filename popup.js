@@ -1,21 +1,63 @@
-const imageSize = "150px";
-
-//function 
+const imageSize = "150px",
+			sender = "POPUP",
+			AVERAGE = "AVERAGE",
+      UNDO    = "UNDO";
+let rankMap = null;
 
 $(document).ready(function() {
 	let imageUrl = chrome.extension.getBackgroundPage().currImageUrl;
-	$("#current").attr("src", imageUrl); 
-	$("#current").css("height", imageSize); 
-	$("#current").css("width", imageSize); 
+	rankMap = chrome.extension.getBackgroundPage().ranks;
+
+	setScoreSystem(rankMap);
+
+	$("#current").attr("src", imageUrl);
+	$("#current").css("height", imageSize);
+	$("#current").css("width", imageSize);
 
 
-	$("#scoreForm").submit(function(event) {
-	  alert("Handler for .submit() called.");
+	$("#submitScores").click(function(event) {
 	  event.preventDefault();
-	  //calculate the average of the ratings
-	  //determine which row it needs to be placed in
-	  //iterate through and place where appropiate; can go
-	  //from top to bottom
-	  //increment id and change the picture 
+		submitScores();
 	});
+
+	$("#undo").click(function(event) {
+	  event.preventDefault();
+		undo();
+	});
+
+	$("#scoreEntry").focus();
 });
+
+function setScoreSystem(rankMap) {
+	const sortedKeys = Object.keys(rankMap).sort(function(a, b) {return a - b});
+
+	for (let i = 0; i < sortedKeys.length; i++){
+		if (i == sortedKeys.length - 1){
+			$("<p class='tiertext'></p>").text(`${rankMap[sortedKeys[i]]}: ${sortedKeys[i]} - 10.00`).prependTo($("#scoreSystem"));
+		} else {
+			$("<p class='tiertext'></p>").text(`${rankMap[sortedKeys[i]]}: ${sortedKeys[i]} - ${sortedKeys[i + 1]}`).prependTo($("#scoreSystem"));
+		}
+
+	}
+}
+
+$(document).on("keypress", function(e) {
+    if (e.which == 13) {
+			submitScores();
+    }
+});
+
+function submitScores(){
+	if (!$("#scoreEntry").val()){
+		return;
+	}
+	let scores = $("#scoreEntry").val().replace(/ /g,'');
+	
+	chrome.runtime.sendMessage({type: AVERAGE, sender: sender, scores: scores});
+	location.reload();
+}
+
+function undo(){
+	chrome.runtime.sendMessage({type: UNDO, sender: sender});
+	location.reload();
+}

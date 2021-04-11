@@ -1,7 +1,35 @@
 html {
-	width: 300px;
+	width: 200px;
+	height: 400px;
 }
 
 body {
-	width: 300px;
+	width: 200px;
+	height: 400px;
+}
+
+.button {
+	margin: 0px 0px 10px 0px;
+}
+
+#scoreEntry {
+	margin: 10px 0px 10px 0px;
+}
+
+#scoreForm {
+	margin: 10px 0px 10px 0px;
+	text-align: center;
+}
+
+#current {
+	margin: 10px 0px 0px 0px;
+}
+
+#scoreSystem {
+	margin: 10px 0px 10px 0px;
+	text-align: center;
+}
+
+.tiertext {
+	font-weight: bold;
 }
