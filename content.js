@@ -24,7 +24,7 @@ chrome.runtime.onMessage.addListener(
 				$("div[class='tier sort']").eq(tier).children().each(function () {
 					let currentScore = $(this).attr("score");
 
-					if (currentScore && score > currentScore){
+					if (!added && currentScore && score > currentScore){
 						$(`#${currIndex + 1}.character`).insertBefore($(this));
 						currIndex++;
 						updatePhoto();
@@ -33,7 +33,7 @@ chrome.runtime.onMessage.addListener(
 					}
 				});
 
-				if (!added) {
+				if (added == false) {
 					$(`#${currIndex + 1}.character`).appendTo($("div[class='tier sort']").eq(tier));
 					currIndex++;
 					updatePhoto();
